@@ -1,2 +1,1 @@
-# Publications
-Mise à disposition des programmes de production des publications à partir de MiDAS
+Ce dépôt de programmes est maintenu par les équipes du Département suivi et indemnisation des demandeurs d'emploi (DSIDE) de la Dares.

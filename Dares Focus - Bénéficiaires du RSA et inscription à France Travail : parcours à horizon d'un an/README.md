@@ -1,4 +1,4 @@
-Ce dossier fournit les programmes ayant servi à produire une partie du Dares Focus n°XX de la Dares : "Bénéficiaires du RSA et inscription à France Travail : parcours à horizon d'un an" [https://dares.travail-emploi.gouv.fr/publication/beneficiaires-du-rsa-et-inscription-france-travail]
+Ce dossier fournit les programmes ayant servi à produire une partie du Dares Focus n°38 de la Dares : "Bénéficiaires du RSA et inscription à France Travail : parcours à horizon d'un an" [https://dares.travail-emploi.gouv.fr/publication/beneficiaires-du-rsa-et-inscription-france-travail]
 
 Source des données : Midas, 2022-2023.
 

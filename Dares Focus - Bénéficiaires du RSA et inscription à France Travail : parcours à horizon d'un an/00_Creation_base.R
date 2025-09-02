@@ -1,13 +1,13 @@
 # Copyright (C). 2025
 
-# Auteures: Poppée Mongruel, Clara Ponton. DARES
+# Auteurs: Gaëtan Guillermin, Poppée Mongruel, Clara Ponton, Joël Presotto. DARES
 
 # Ce programme informatique a été développé par la DARES.
-# Il permet de produire les illustrations et les résultats de la publication N°*XX* de la collection Dares FOCUS "Bénéficiaires du RSA et inscription à France Travail : parcours à horizon d'un an"
+# Il permet de produire les illustrations et les résultats des publications N°38, 54, 58 et de la collection Dares FOCUS "Bénéficiaires du RSA et inscription à France Travail"
 
 # Le texte et les tableaux peuvent être consultés sur le site de la Dares : https://dares.travail-emploi.gouv.fr/publication/beneficiaires-du-rsa-et-inscription-france-travail
 
-# Ce programme utilise les données Midas de juin 2022 à juin 2023. 
+# Ce programme utilise les données Midas de juin 2022. 
 # Dans les données utilisées, les bénéficiaires du RSA sont repérés par leur identifiant MIDAS, qui n'est diffusé que via le CASD
 
 # Bien qu'ils n'existent aucune obligation légale à ce sujet, les utilisateurs de ce programme sont invités à signaler à la DARES leurs travaux issus de la réutilisation de ce code, ainsi que les éventuels problèmes ou anomalies qu'ils y rencontreraient.
@@ -18,7 +18,6 @@
 #############
 rm(list=ls())
 
-Sys.setenv(SPARK_HOME="C:/USERS/MIDARES_C_PONTON0/AppData/Local/spark/spark-3.3.2-bin-hadoop3")
 
 #### Import des librairies ------
 librairie <- c("knitr","xlsx","lubridate","haven","here","dplyr","tidyr","ggplot2","writexl",
@@ -68,12 +67,12 @@ sc <- spark_connect(master="local",config=conf)
 ## FHS - Demandeurs d'emploi en fin de mois en juin 2022 (inscription en cours le 30/06) ---------
 de <- spark_read_parquet(sc, memory=FALSE,
                          paste0(dir_spark, "/FHS/de.parquet")) %>%
-  dplyr::select(id_midas, NDEM, SEXE, NATION, DATINS, DATANN, ANCIEN, AGE, 
+  select(id_midas, NDEM, SEXE, NATION, DATINS, DATANN, ANCIEN, AGE, 
                 NENF, NIVFOR, RSQSTAT, SITMAT, CATREGR, SITPAR, SITPAR_A) %>% 
-  dplyr::mutate(DATINS = as.Date(DATINS),
+  mutate(DATINS = as.Date(DATINS),
                 DATANN = as.Date(DATANN)) %>%
-  dplyr::filter(DATINS <= fin_mois_m & (is.na(DATANN) | DATANN > fin_mois_m)) %>%
-  dplyr::mutate(MOIS = mois_m) %>%
+  filter(DATINS <= fin_mois_m & (is.na(DATANN) | DATANN > fin_mois_m)) %>%
+  mutate(MOIS = mois_m) %>%
   window_order(id_midas, DATINS) %>% 
   group_by(id_midas) %>% 
   filter(row_number() == 1) %>% # Dédoublonne : garde la date d'inscription la plus récente
@@ -89,7 +88,7 @@ de <- spark_read_parquet(sc, memory=FALSE,
               filter(row_number() == 1) %>% # Dédoublonne : garde le nombre d'heure le plus important
               ungroup(), 
             by = c("id_midas" = "id_midas", "NDEM" = "NDEM", "MOIS" = "MOIS")) %>% 
-  dplyr::mutate(catnouv = case_when(
+  mutate(catnouv = case_when(
     CATREGR %in% c("1","2","3") & (is.na(NBHEUR) == TRUE | NBHEUR == 0) ~ "A",
     CATREGR %in% c("1","2","3") & (NBHEUR > 0 & NBHEUR <= 78) ~ "B",
     CATREGR %in% c("1","2","3") & (NBHEUR > 78) ~ "C",
@@ -101,7 +100,7 @@ de <- spark_read_parquet(sc, memory=FALSE,
 # variable TOP_CONJ pour identifier le conjoint dans le foyer social
 table_topconj <- spark_read_parquet(sc, memory=FALSE,
                                     paste0(dir_spark, "/Allstat/TOPCONJ/cnaf_topconj_", mois_cnaf, ".parquet")) %>%
-  dplyr::mutate(id_menage = paste0(NORDALLC,NUMCAF)) %>%
+  mutate(id_menage = paste0(NORDALLC,NUMCAF)) %>%
   window_order(id_midas) %>%
   group_by(id_midas) %>%
   filter(row_number() == 1) %>% 
@@ -112,14 +111,14 @@ table_topconj <- spark_read_parquet(sc, memory=FALSE,
 table_menage <- spark_read_parquet(sc, 
                                    paste0(dir_spark,"/Allstat/menage/cnaf_menage_", mois_cnaf, ".parquet"), 
                                    memory = FALSE) %>%
-  dplyr::select(c("NUMCAF","DTREFFRE","NORDALLC","SEXE", "SITFAM", 
+  select(c("NUMCAF","DTREFFRE","NORDALLC","SEXE", "SITFAM", 
                   "DTNAIRES", "SEXECONJ", "DTNAICON", "MTAFVERS", "MTCFVERS", "MTAIDELO",
                   "MTBPAJEV", "MTPAJCAV", "MTPAJPRV", "PAJPCAMM",
                   "PAJPCDOM", "PAJPCSTM", "MTREVBRU", "MTREVACT", "MTCHOFOY", 
                   "MTRANSAF", "MTALIMFO", "MTALIMVE", "MTPALIFT", "MTIJSSFT", "MTFONPAT",
                   "MTACFOY1", "MTACFOY2", "MTACFOY3", "MTCHFOY1", "MTCHFOY2",
                   "MTCHFOY3", "MTOTFOY1",  "MTOTFOY2",  "MTOTFOY3","ACTCONJ")) %>%
-  dplyr::mutate(id_menage = paste0(NORDALLC,NUMCAF)) %>%
+  mutate(id_menage = paste0(NORDALLC,NUMCAF)) %>%
   window_order(id_menage) %>%
   group_by(id_menage) %>%
   filter(row_number() == 1) %>%
@@ -129,11 +128,11 @@ table_menage <- spark_read_parquet(sc,
 ## Table minimas sociaux : récupérer les bénéficiaires du RSA de juin 2022 ----------
 table_ms <- spark_read_parquet(sc, paste0(dir_spark, 
                                           "/Allstat/minsoc/cnaf_minsoc_", mois_cnaf, ".parquet"), memory=FALSE) %>%
-  dplyr::filter(RSAVERS %in% c("RSA droit commun", "RSA droit local",
+  filter(RSAVERS %in% c("RSA droit commun", "RSA droit local",
                                "RSA jeune", "RSA expérimental", "C", "L", "J", "E")) %>%
-  dplyr::filter(MTRSAVER > 0) %>%
+  filter(MTRSAVER > 0) %>%
   # sélectionner uniquement les BRSA qui perçoivent une allocation non nulle
-  dplyr::mutate(id_menage = paste0(NORDALLC,NUMCAF)) %>%
+  mutate(id_menage = paste0(NORDALLC,NUMCAF)) %>%
   window_order(id_midas) %>%
   group_by(id_midas) %>%
   filter(row_number() == 1) %>% 
@@ -149,9 +148,9 @@ ms <- table_ms %>%
 # création des variables socio-démographiques
 de_ms <- ms %>%
   left_join(de, by="id_midas",  suffix=c("_ms","_de")) %>%
-  dplyr::select(-c(AAHPERE, COMPLAAH, TRIMPPA, PANBENAU, PPASITFA, RSAMAJI)) %>%
+  select(-c(AAHPERE, COMPLAAH, TRIMPPA, PANBENAU, PPASITFA, RSAMAJI)) %>%
   collect() %>%
-  dplyr::mutate(DE = ifelse(!is.na(DATINS),"DE","Non DE"),
+  mutate(DE = ifelse(!is.na(DATINS),"DE","Non DE"),
                 PPAVERS = ifelse(PPAVERS %in% 
                                    c("Prime d'Activité non majorée 25 ans et +", "2",
                                      "Prime d'Activité majorée", "3",
@@ -187,29 +186,8 @@ de_ms <- ms %>%
                 ENFCHAR_1 = ifelse(RSENAUTC == 1,1,0),
                 ENFCHAR_2 = ifelse(RSENAUTC == 2,1,0),
                 ENFCHAR_3plus = ifelse(RSENAUTC >= 3,1,0),
-                RESTRRSA = as.numeric(RESTRRSA),
-                LOCATAIRE = ifelse(RSOCCLOG %in% c("Locataire ou sous locataire", "LOC"),1,0),
-                PROPRIETAIRE = ifelse(RSOCCLOG %in%
-                                        c("Propriétaire avec charges de remboursement",
-                                          "Propriétaire sans charges de remboursement",
-                                          "PRO", "ACC"),1,0),
-                HEBERGEMENT = ifelse(RSOCCLOG %in%
-                                       c("Hébergement à titre gratuit par des particuliers",
-                                         "Hébergement collectif à titre gratuit",
-                                         "Hébergement collectif à titre onéreux",
-                                         "Hébergement onéreux par des particuliers", 
-                                         "HCG", "HCO", "HGP", "HOP"),1,0),
-                SANS_RESID_STABLE = ifelse(RSOCCLOG %in% 
-                                             c("Sans résid. stable avec forfait logement",
-                                               "Sans résid. stable sans forfait logement",
-                                               "SRG", "SRO"), 1,0),
-                LOGEMENT_AUTRE = ifelse(RSOCCLOG %in% 
-                                          c("Pas de droit ou code inconnu", "000",
-                                            "Forfait logement à appliquer", "BAL",
-                                            "Hôtel", "HOT", "OLI",
-                                            "Occupation logement inconnue"),1,0)
-  ) %>%
-  dplyr::mutate(
+                RESTRRSA = as.numeric(RESTRRSA)) %>%
+  mutate(
     AGE = case_when(
       AGE_25 == 1 ~ "Moins de 25 ans",
       AGE_25_29 == 1 ~ "25-29 ans",
@@ -240,4 +218,5 @@ de_ms <- ms %>%
 
 
 # Enregistrer la base
-write_parquet(de_ms, sink="de_ms_DF3.parquet")
+write_parquet(de_ms, sink="de_ms.parquet")
+

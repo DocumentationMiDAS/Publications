@@ -1,6 +1,6 @@
 # Copyright (C). 2025
 
-# Auteures: Poppée Mongruel, Clara Ponton. DARES
+# Auteures: Gaëtan Guillermin, Poppée Mongruel, Joël Presotto. DARES
 
 # Ce programme informatique a été développé par la DARES.
 # Il permet de produire les illustrations et les résultats de la publication N°54 de la collection Dares FOCUS "Bénéficiaires du RSA et inscription à France Travail : profil et situation"
@@ -586,3 +586,4 @@ write.xlsx(carte, file="DF1.xlsx", sheet="carte", append=TRUE)
 
 
 ##################### fin#########################
+

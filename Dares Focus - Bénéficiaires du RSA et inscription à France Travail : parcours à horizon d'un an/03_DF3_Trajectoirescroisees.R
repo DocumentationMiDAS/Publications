@@ -3,7 +3,7 @@
 # Auteures: Poppée Mongruel, Clara Ponton. DARES
 
 # Ce programme informatique a été développé par la DARES.
-# Il permet de produire les illustrations et les résultats de la publication N°*XX* de la collection Dares FOCUS "Bénéficiaires du RSA et inscription à France Travail : parcours à horizon d'un an"
+# Il permet de produire les illustrations et les résultats de la publication N°38 de la collection Dares FOCUS "Bénéficiaires du RSA et inscription à France Travail : parcours à horizon d'un an"
 
 # Le texte et les tableaux peuvent être consultés sur le site de la Dares : https://dares.travail-emploi.gouv.fr/publication/beneficiaires-du-rsa-et-inscription-france-travail
 
@@ -16,9 +16,6 @@
 # Ce programme a été exécuté pour la dernière fois le 01/07/2025 avec la version 4.5.1 de R.
 
 rm(list=ls())
-
-Sys.setenv(SPARK_HOME="C:/USERS/MIDARES_C_PONTON0/AppData/Local/spark/spark-3.3.2-bin-hadoop3")
-
 
 #### Import des librairies #### ------
 librairie <- c("knitr","xlsx","lubridate","haven","here","dplyr","tidyr","ggplot2","writexl",
@@ -404,6 +401,7 @@ g
 ggsave(g,file="C:/Users/Public/Documents/etudes/DF BRSA et DE/BRSA et DE/DF3_bit_croises.jpg")
 ggsave(g,file="C:/Users/Public/Documents/etudes/DF BRSA et DE/BRSA et DE/DF3_bit_croises.svg")
 ggsave(g,file="C:/Users/Public/Documents/etudes/DF BRSA et DE/BRSA et DE/DF3_bit_croises.pdf")
+
 
 
 

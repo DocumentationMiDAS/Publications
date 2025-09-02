@@ -12,5 +12,5 @@ Les scripts utilisés sont les suivants :
 - 00_Creation_base.R : création de la base
 - 01_DF1_profil_et_situation.R : caractérisation des bénéficiaires du RSA selon qu'ils sont inscrits ou non à France Travail en juin 2022.
 - 02_DF2_parcours_sur_une_annee.R : situation passée des bénéficiaires du RSA vis-à-vis de l'emploi, des minima sociaux et du chômage, selon leur inscription à France Travail en juin 2022.
-- 02_DF3_Retouremploibit.R : création d'indicateurs de retour en emploi BIT à horizon 1 an pour les bénéficiaires du RSA de juin 2022 en fonction de leur inscription à France Travail à cette date et de leurs caractéristiques socio-démographiques.
+- 03_DF3_Retouremploibit.R : création d'indicateurs de retour en emploi BIT à horizon 1 an pour les bénéficiaires du RSA de juin 2022 en fonction de leur inscription à France Travail à cette date et de leurs caractéristiques socio-démographiques.
 - 03_DF3_Trajectoirescroisees.R : création d'indicateurs de la situation croisée au regard du RSA, de l'inscription à France Travail et de l'emploi BIT à horizon 1 an, en fonction de la situation en juin 2022. 

@@ -13,12 +13,9 @@
 # Bien qu'ils n'existent aucune obligation légale à ce sujet, les utilisateurs de ce programme sont invités à signaler à la DARES leurs travaux issus de la réutilisation de ce code, ainsi que les éventuels problèmes ou anomalies qu'ils y rencontreraient.
 # Contact : contact.dares.dmq@travail.gouv.fr
 
-# Ce programme a été exécuté pour la dernière fois le 03♥/09/2025 avec la version 4.5.1 de R.
+# Ce programme a été exécuté pour la dernière fois le 03/09/2025 avec la version 4.5.1 de R.
 
 rm(list=ls())
-
-# import de la fonction sur les contrats
-load("C:/Users/Public/Documents/etudes/DF BRSA et DE/BRSA et DE/stat_contrats.Rda")
 
 #### Import des librairies #### ------
 librairie <- c("knitr","xlsx","lubridate","haven","here","dplyr","tidyr","ggplot2","writexl",
@@ -1100,3 +1097,4 @@ temps_passe_contrat_cdi <- rbind (
 # # exporter en excel
 # write.xlsx(temps_passe_contrat_cdi, file="DF2.xlsx", 
 #            sheet="temps enc ontrat cdi ", append=TRUE)
+
